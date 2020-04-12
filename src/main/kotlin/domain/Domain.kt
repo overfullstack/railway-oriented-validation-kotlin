@@ -9,8 +9,8 @@ enum class Condition {
     GOOD, BAD
 }
 
-data class Egg(var daysToHatch: Int, var yolk: Yolk)
+data class Egg(var daysToHatch: Int, var yolk: Yolk?)
 
-data class ImmutableEgg(val daysToHatch: Int, val yolk: Yolk)
+data class ImmutableEgg(val daysToHatch: Int, val yolk: Yolk?)
 
 data class Yolk(val condition: Condition, val color: Color)
