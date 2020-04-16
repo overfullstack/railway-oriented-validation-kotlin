@@ -1,5 +1,5 @@
 /* gakshintala created on 4/10/20 */
-package domain.validation
+package app.domain.validation
 
 interface ValidationFailure {
     companion object {

@@ -1,6 +1,7 @@
-package imperative
+package app.imperative
 
-import common.expectedImperativeValidationResults
+import app.common.eggCarton
+import app.common.expectedImperativeValidationResults
 import mu.KLogging
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
@@ -9,7 +10,7 @@ import org.junit.jupiter.api.Test
 class ImperativeValidationTest {
     @Test
     fun cyclomaticCode() {
-        val badEggFailureBucketMap = validateEggCartonImperatively()
+        val badEggFailureBucketMap = validateEggCartonImperatively(eggCarton.toMutableList()) // sending a copy, a the iterator is common
         logger.info { badEggFailureBucketMap }
         Assertions.assertEquals(expectedImperativeValidationResults, badEggFailureBucketMap)
     }

@@ -22,14 +22,12 @@ dependencies {
     implementation("io.arrow-kt:arrow-core:$arrowSnapshotVersion")
     implementation("io.arrow-kt:arrow-fx:$arrowSnapshotVersion")
     implementation("io.github.microutils:kotlin-logging:+")
-    implementation("org.apache.logging.log4j:log4j-api:+")
-    implementation("org.apache.logging.log4j:log4j-core:+")
-    implementation("org.apache.logging.log4j:log4j-slf4j-impl:+")
 
-    testImplementation("org.junit.jupiter:junit-jupiter:+") {
-        exclude("junit", "junit")
-        exclude("org.junit.vintage", "junit-vintage-engine")
-    }
+    runtimeOnly("org.apache.logging.log4j:log4j-core:+")
+    runtimeOnly("org.apache.logging.log4j:log4j-slf4j-impl:+")
+
+    testImplementation("org.junit.jupiter:junit-jupiter-api:+")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:+")
 }
 
 tasks.withType<KotlinCompile> {
@@ -39,7 +37,9 @@ tasks.withType<KotlinCompile> {
 }
 
 tasks.withType<Test> {
-    useJUnitPlatform()
+    useJUnitPlatform {
+        includeEngines("junit-jupiter")
+    }
 }
 
 detekt {

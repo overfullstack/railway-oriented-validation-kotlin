@@ -1,26 +1,26 @@
 /* gakshintala created on 4/10/20 */
-package common
+package app.declarative
 
-import arrow.core.Either
-import declarative.*
-import domain.ImmutableEgg
-import domain.Yolk
-import domain.validation.ValidationFailure
-import domain.validation.ValidationFailures.NO_CHILD_TO_VALIDATE
-import domain.validation.ValidationFailures.NO_PARENT_TO_VALIDATE_CHILD
+import algebra.Validator
+import algebra.liftAllToParentValidationType
+import algebra.liftToParentValidationType
+import app.common.MAX_SIZE_FOR_PARALLEL
+import app.domain.ImmutableEgg
+import app.domain.Yolk
+import app.domain.validation.ValidationFailure
+import app.domain.validation.ValidationFailures.NO_CHILD_TO_VALIDATE
+import app.domain.validation.ValidationFailures.NO_PARENT_TO_VALIDATE_CHILD
 import java.util.stream.Stream
 
-const val MIN_DAYS_TO_HATCH = 15
-const val MAX_DAYS_TO_HATCH = 21
-const val MAX_DAYS_TO_SHIP = 5
-const val MAX_SIZE_FOR_PARALLEL = 10000
-
-typealias Validator<FailureT, ValidatableT> = (Either<FailureT, ValidatableT>) -> Either<FailureT, ValidatableT>
-
+/**
+ * The Validation Chains.<br>
+ * If these parent-child dependencies are complex, we can make use of some graph algorithm to create a linear dependency graph of all validations.
+ */
 val PARENT_VALIDATION_CHAIN = listOf(validate1Simple, validate2Throwable, validateParent3)
-val CHILD_VALIDATION_CHAIN: List<Validator<ValidationFailure, Yolk>> = listOf(validateChild31, validateChild32)
 
-val EGG_VALIDATION_CHAIN: List<Validator<ValidationFailure, ImmutableEgg>> = (
+val CHILD_VALIDATION_CHAIN: List<Validator<Yolk, ValidationFailure>> = listOf(validateChild31, validateChild32)
+
+val EGG_VALIDATION_CHAIN: List<Validator<ImmutableEgg, ValidationFailure>> = (
         PARENT_VALIDATION_CHAIN + liftAllToParentValidationType(
             CHILD_VALIDATION_CHAIN,
             ImmutableEgg::yolk,

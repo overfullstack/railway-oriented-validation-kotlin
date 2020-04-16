@@ -1,11 +1,10 @@
 /* gakshintala created on 4/12/20 */
-package imperative
+package app.imperative
 
-import common.eggCarton
-import domain.Egg
-import domain.Yolk
-import domain.validation.ValidationFailure
-import domain.validation.ValidationFailures
+import app.domain.Egg
+import app.domain.Yolk
+import app.domain.validation.ValidationFailure
+import app.domain.validation.ValidationFailures
 
 fun validate1(
     badEggFailureBucketMap: MutableMap<Int, ValidationFailure>,
@@ -207,8 +206,26 @@ fun validateParent42(
     return true
 }
 
+/**
+ * <pre>
+ * Validations are broken down to separate functions.
+ *
+ * Problems:
+ * ∙ Octopus Orchestration
+ * ∙ Mutation
+ * ∙ Unit-Testability
+ * . Non-sharable
+ * ∙ Don't attempt to run in Parallel
+ *
+ * Major Problems
+ * ∙ Management of Validation Order - how-to-do
+ * ∙ Complexity
+ * ∙ Chaos
+ * </pre>
+ */
+
 @Suppress("LoopWithTooManyJumpStatements")
-fun validateEggCartonImperatively2(): MutableMap<Int, ValidationFailure> {
+fun validateEggCartonImperatively2(eggCarton: MutableList<Egg?>): MutableMap<Int, ValidationFailure> {
     // R3 - Trying to be the owner of all state.
     val badEggFailureBucketMap = mutableMapOf<Int, ValidationFailure>()
     var eggIndex = 0
@@ -254,8 +271,5 @@ fun validateEggCartonImperatively2(): MutableMap<Int, ValidationFailure> {
         }
         eggIndex++
     }
-    /*for (entry in badEggFailureBucketMap.entries) {
-        log.info(entry)
-    }*/
     return badEggFailureBucketMap
 }

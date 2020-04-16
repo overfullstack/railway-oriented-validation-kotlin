@@ -1,17 +1,16 @@
 /* gakshintala created on 4/11/20 */
-package declarative
+package algebra
 
 import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
-import common.Validator
 
 /* ---------------------------FAIL FAST--------------------------- */
 
-fun <FailureT, ValidatableT> getFailFastStrategy(
-    validations: List<Validator<FailureT, ValidatableT>>,
+fun <FailureT, ValidatableT> getFailFastStrategyStrategy(
+    validations: List<Validator<ValidatableT, FailureT>>,
     invalidValidatable: FailureT
-): (ValidatableT?) -> Either<FailureT, ValidatableT> = {
+): FailFastStrategy<ValidatableT, FailureT> = {
     when (it) {
         null -> invalidValidatable.left()
         else -> {
@@ -23,10 +22,10 @@ fun <FailureT, ValidatableT> getFailFastStrategy(
     }
 }
 
-fun <FailureT, ValidatableT> getFailFastStrategy2(
-    validations: List<Validator<FailureT, ValidatableT>>,
+fun <FailureT, ValidatableT> getFailFastStrategyStrategy2(
+    validations: List<Validator<ValidatableT, FailureT>>,
     invalidValidatable: FailureT
-): (ValidatableT?) -> Either<FailureT, ValidatableT> =
+): FailFastStrategy<ValidatableT, FailureT> =
     { toBeValidated ->
         when (toBeValidated) {
             null -> invalidValidatable.left()
@@ -40,9 +39,26 @@ fun <FailureT, ValidatableT> getFailFastStrategy2(
     }
 
 fun <FailureT, ValidatableT> getErrorAccumulationStrategy(
-    validations: List<Validator<FailureT, ValidatableT>>,
+    validations: List<Validator<ValidatableT, FailureT>>,
     invalidValidatable: FailureT
-): (ValidatableT?) -> List<Either<FailureT, ValidatableT>> =
+): AccumulationStrategy<ValidatableT, FailureT> =
+    {
+        when (it) {
+            null -> listOf(invalidValidatable.left())
+            else -> {
+                val toBeValidatedRight: Either<FailureT, ValidatableT> = it.right()
+                validations.fold(emptyList()) { failureResults, currentValidation ->
+                    val result = currentValidation(toBeValidatedRight)
+                    if (result.isLeft()) (failureResults + result) else failureResults
+                }
+            }
+        }
+    }
+
+fun <FailureT, ValidatableT> getErrorAccumulationStrategy2(
+    validations: List<Validator<ValidatableT, FailureT>>,
+    invalidValidatable: FailureT
+): AccumulationStrategy<ValidatableT, FailureT> =
     { toBeValidated ->
         when (toBeValidated) {
             null -> listOf(invalidValidatable.left())
@@ -50,19 +66,19 @@ fun <FailureT, ValidatableT> getErrorAccumulationStrategy(
                 val toBeValidatedRight: Either<FailureT, ValidatableT> = toBeValidated.right()
                 validations
                     .map { validation -> validation(toBeValidatedRight) }
-                    .toList()
+                    .filter { it.isLeft() }
             }
         }
     }
 
-fun <FailureT, ValidatableT> runAllValidationsFailFastImperative(
+fun <FailureT, ValidatableT> runAllValidationsFailFastStrategyImperative(
     validatables: List<ValidatableT?>,
-    validations: List<Validator<FailureT, ValidatableT>>,
+    validations: List<Validator<ValidatableT, FailureT>>,
     invalidValidatable: FailureT
 ): List<Either<FailureT, ValidatableT>> {
     val validationResults = mutableListOf<Either<FailureT, ValidatableT>>()
     for (validatable in validatables) {
-        validationResults += when (validatable) {
+        validationResults += when (validatable) { // 🚩 Mutation 
             null -> invalidValidatable.left()
             else -> {
                 var toBeValidatedRight: Either<FailureT, ValidatableT> = validatable.right()

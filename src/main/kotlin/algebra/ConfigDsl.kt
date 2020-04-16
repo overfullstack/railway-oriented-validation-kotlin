@@ -1,4 +1,4 @@
-package common
+package algebra
 
 import arrow.core.Either
 import arrow.core.flatMap
@@ -8,11 +8,11 @@ import arrow.core.right
 /* gakshintala created on 4/10/20 */
 
 fun <ParentT, ChildT, FailureT> liftToParentValidationType(
-    childValidation: Validator<FailureT, ChildT>,
+    childValidation: Validator<ChildT, FailureT>,
     toChildMapper: (ParentT) -> ChildT?,
     invalidParent: FailureT,
     invalidChild: FailureT
-): Validator<FailureT, ParentT> = { validatedParent: Either<FailureT, ParentT?> ->
+): Validator<ParentT, FailureT> = { validatedParent: Either<FailureT, ParentT?> ->
     validatedParent
         .flatMap { parent ->
             when (parent) {
@@ -26,11 +26,11 @@ fun <ParentT, ChildT, FailureT> liftToParentValidationType(
 }
 
 fun <ParentT, ChildT, FailureT> liftAllToParentValidationType(
-    childValidations: List<Validator<FailureT, ChildT>>,
+    childValidations: List<Validator<ChildT, FailureT>>,
     toChildMapper: (ParentT) -> ChildT?,
     invalidParent: FailureT,
     invalidChild: FailureT
-): List<Validator<FailureT, ParentT>> = childValidations.map {
+): List<Validator<ParentT, FailureT>> = childValidations.map {
     liftToParentValidationType(
         it,
         toChildMapper,

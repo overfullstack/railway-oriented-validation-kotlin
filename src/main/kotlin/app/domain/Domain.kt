@@ -1,5 +1,5 @@
 /* gakshintala created on 4/10/20 */
-package domain
+package app.domain
 
 enum class Color {
     YELLOW, GOLD, ORANGE

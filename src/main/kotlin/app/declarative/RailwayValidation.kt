@@ -1,20 +1,36 @@
 /* gakshintala created on 4/10/20 */
-package declarative
+package app.declarative
 
 import arrow.core.extensions.either.monad.flatten
 import arrow.core.filterOrElse
 import arrow.core.flatMap
-import common.Validator
-import domain.ImmutableEgg
-import domain.Yolk
-import domain.validation.ValidationFailure
-import domain.validation.ValidationFailures.*
+import algebra.Validator
+import app.domain.ImmutableEgg
+import app.domain.Yolk
+import app.domain.validation.ValidationFailure
+import app.domain.validation.ValidationFailures.*
 
-val validate1Simple: Validator<ValidationFailure, ImmutableEgg> = {
+/**
+ * <pre>
+ * This class contains validations as functions.
+ *
+ * Requirements
+ * ∙ Partial Failures
+ *
+ * Problems solved:
+ * ∙ Octopus Orchestrator - 😵 dead
+ * ∙ Mutation to Transformation
+ * ∙ Unit-Testability - 👍
+ * ∙ Complexity - Minimum
+ * ∙ Chaos to Order
+ * </pre>
+ */
+
+val validate1Simple: Validator<ImmutableEgg, ValidationFailure> = {
     it.filterOrElse(::simpleOperation1) { NO_EGG_TO_VALIDATE_1 }
 }
 
-val validate2Throwable: Validator<ValidationFailure, ImmutableEgg> = { validatedEgg ->
+val validate2Throwable: Validator<ImmutableEgg, ValidationFailure> = { validatedEgg ->
     validatedEgg
         .flatMap {
             throwableOperation2(it).unsafeRunSyncEither().flatten()
@@ -24,7 +40,7 @@ val validate2Throwable: Validator<ValidationFailure, ImmutableEgg> = { validated
         .flatMap { validatedEgg }
 }
 
-val validateParent3: Validator<ValidationFailure, ImmutableEgg> = { validatedEgg ->
+val validateParent3: Validator<ImmutableEgg, ValidationFailure> = { validatedEgg ->
     validatedEgg
         .flatMap {
             throwableOperation3(it).unsafeRunSyncEither().flatten()
@@ -34,7 +50,7 @@ val validateParent3: Validator<ValidationFailure, ImmutableEgg> = { validatedEgg
         .flatMap { validatedEgg }
 }
 
-val validateChild31: Validator<ValidationFailure, Yolk> = { validatedYolk ->
+val validateChild31: Validator<Yolk, ValidationFailure> = { validatedYolk ->
     validatedYolk
         .flatMap {
             throwableNestedOperation31(it).unsafeRunSyncEither().flatten()
@@ -44,7 +60,7 @@ val validateChild31: Validator<ValidationFailure, Yolk> = { validatedYolk ->
         .flatMap { validatedYolk }
 }
 
-val validateChild32: Validator<ValidationFailure, Yolk> = { validatedYolk ->
+val validateChild32: Validator<Yolk, ValidationFailure> = { validatedYolk ->
     validatedYolk
         .flatMap {
             throwableNestedOperation31(it).unsafeRunSyncEither().flatten()
@@ -54,7 +70,7 @@ val validateChild32: Validator<ValidationFailure, Yolk> = { validatedYolk ->
         .flatMap { validatedYolk }
 }
 
-val validateParent41: Validator<ValidationFailure, ImmutableEgg> = { validatedEgg ->
+val validateParent41: Validator<ImmutableEgg, ValidationFailure> = { validatedEgg ->
     validatedEgg
         .flatMap {
             throwableOperation3(it).unsafeRunSyncEither().flatten()
@@ -64,7 +80,7 @@ val validateParent41: Validator<ValidationFailure, ImmutableEgg> = { validatedEg
         .flatMap { validatedEgg }
 }
 
-val validateParent42: Validator<ValidationFailure, ImmutableEgg> = { validatedEgg ->
+val validateParent42: Validator<ImmutableEgg, ValidationFailure> = { validatedEgg ->
     validatedEgg
         .flatMap {
             throwableOperation3(it).unsafeRunSyncEither().flatten()
@@ -74,7 +90,7 @@ val validateParent42: Validator<ValidationFailure, ImmutableEgg> = { validatedEg
         .flatMap { validatedEgg }
 }
 
-val validateChild4: Validator<ValidationFailure, Yolk> = { validatedYolk ->
+val validateChild4: Validator<Yolk, ValidationFailure> = { validatedYolk ->
     validatedYolk
         .flatMap {
             throwableNestedOperation31(it).unsafeRunSyncEither().flatten()

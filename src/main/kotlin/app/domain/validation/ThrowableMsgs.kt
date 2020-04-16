@@ -1,5 +1,5 @@
 /* gakshintala created on 4/10/20 */
-package domain.validation
+package app.domain.validation
 
 const val THROWABLE_OPERATION_2 = "throwableOperation2: Might never hatch 😕"
 const val THROWABLE_VALIDATION_3 = "throwableValidation31: Chicken might already be out! 🐣"

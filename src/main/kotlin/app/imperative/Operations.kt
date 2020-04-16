@@ -1,23 +1,24 @@
 /* gakshintala created on 4/12/20 */
-package imperative
+package app.imperative
 
-import common.MAX_DAYS_TO_HATCH
-import common.MAX_DAYS_TO_SHIP
-import common.MIN_DAYS_TO_HATCH
-import domain.Color
-import domain.Condition
-import domain.Egg
-import domain.Yolk
-import domain.validation.THROWABLE_NESTED_OPERATION_31
-import domain.validation.THROWABLE_NESTED_OPERATION_32
-import domain.validation.THROWABLE_OPERATION_2
-import domain.validation.THROWABLE_VALIDATION_3
+import app.common.MAX_DAYS_TO_HATCH
+import app.common.MAX_DAYS_TO_SHIP
+import app.common.MIN_DAYS_TO_HATCH
+import app.domain.Color
+import app.domain.Condition
+import app.domain.Egg
+import app.domain.Yolk
+import app.domain.validation.THROWABLE_NESTED_OPERATION_31
+import app.domain.validation.THROWABLE_NESTED_OPERATION_32
+import app.domain.validation.THROWABLE_OPERATION_2
+import app.domain.validation.THROWABLE_VALIDATION_3
 
 fun simpleOperation1(eggToBeValidated: Egg?): Boolean = eggToBeValidated != null
 
 // These check positive cases, true = success ; false = ValidationFailure
-//-----------------------|5----------------|15-------------------|21-------------------
-//----About to hatch----|------Valid-------|--Might never hatch--|--Too late to hatch--|
+// -----------------------|5----------------|15-------------------|21-------------------
+// ----About to hatch----|------Valid-------|--Might never hatch--|--Too late to hatch--|
+
 fun throwableOperation2(eggToBeValidated: Egg): Boolean = if (eggToBeValidated.daysToHatch >= MAX_DAYS_TO_HATCH) {
     // Unchecked Exception. Caller would have no clue of this.
     throw IllegalArgumentException(THROWABLE_OPERATION_2)

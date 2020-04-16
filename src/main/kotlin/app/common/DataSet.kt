@@ -1,15 +1,15 @@
 /* gakshintala created on 4/12/20 */
-package common
+package app.common
 
 import arrow.core.Either
-import domain.Color.*
-import domain.Condition.BAD
-import domain.Condition.GOOD
-import domain.Egg
-import domain.ImmutableEgg
-import domain.Yolk
-import domain.validation.*
-import domain.validation.ValidationFailures.*
+import app.domain.Color.*
+import app.domain.Condition.BAD
+import app.domain.Condition.GOOD
+import app.domain.Egg
+import app.domain.ImmutableEgg
+import app.domain.Yolk
+import app.domain.validation.*
+import app.domain.validation.ValidationFailures.*
 
 val eggCarton: MutableList<Egg?> = mutableListOf(
     null, // No egg to validate

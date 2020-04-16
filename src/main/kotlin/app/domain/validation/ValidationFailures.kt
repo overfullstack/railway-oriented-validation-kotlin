@@ -1,5 +1,5 @@
 /* gakshintala created on 4/10/20 */
-package domain.validation
+package app.domain.validation
 
 enum class ValidationFailures(failureMsg: String) : ValidationFailure {
     NONE("NONE"),

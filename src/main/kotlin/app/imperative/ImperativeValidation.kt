@@ -1,12 +1,23 @@
 /* gakshintala created on 4/12/20 */
-package imperative
+package app.imperative
 
-import common.eggCarton
-import domain.validation.ValidationFailure
-import domain.validation.ValidationFailures
+import app.common.eggCarton
+import app.domain.Egg
+import app.domain.validation.ValidationFailure
+import app.domain.validation.ValidationFailures
 
-@Suppress("LoopWithTooManyJumpStatements")
-fun validateEggCartonImperatively(): Map<Int, ValidationFailure>? {
+/**
+ * <pre>
+ * Problems:
+ * ∙ Complexity
+ * ∙ Mutation
+ * . Non-sharable
+ * ∙ Unit-Testability
+ * ∙ Validation Jenga
+ * </pre>
+ */
+@Suppress("LoopWithTooManyJumpStatements", "TooGenericExceptionCaught")
+fun validateEggCartonImperatively(eggCarton: MutableList<Egg?>): Map<Int, ValidationFailure>? {
     val badEggFailureBucketMap = mutableMapOf<Int, ValidationFailure>()
     var eggIndex = 0
     val iterator = eggCarton.iterator()
