@@ -14,9 +14,9 @@ fun <FailureT, ValidatableT> getFailFastStrategyStrategy(
     when (it) {
         null -> invalidValidatable.left()
         else -> {
-            val initial: Either<FailureT, ValidatableT> = it.right()
-            validations.fold(initial) { validated, currentValidation ->
-                if (validated.isRight()) currentValidation(initial) else validated
+            val toBeValidatedRight: Either<FailureT, ValidatableT> = it.right()
+            validations.fold(toBeValidatedRight as Either<FailureT, Any?>) { prevValidationResult, currentValidation ->
+                if (prevValidationResult.isRight()) currentValidation(toBeValidatedRight) else prevValidationResult
             }
         }
     }
@@ -75,20 +75,21 @@ fun <FailureT, ValidatableT> runAllValidationsFailFastStrategyImperative(
     validatables: List<ValidatableT?>,
     validations: List<Validator<ValidatableT, FailureT>>,
     invalidValidatable: FailureT
-): List<Either<FailureT, ValidatableT>> {
-    val validationResults = mutableListOf<Either<FailureT, ValidatableT>>()
+): List<Either<FailureT, Any?>> {
+    val validationResults = mutableListOf<Either<FailureT, Any?>>()
     for (validatable in validatables) {
         validationResults += when (validatable) { // 🚩 Mutation 
             null -> invalidValidatable.left()
             else -> {
-                var toBeValidatedRight: Either<FailureT, ValidatableT> = validatable.right()
+                val toBeValidatedRight: Either<FailureT, ValidatableT> = validatable.right()
+                lateinit var validationResult: Either<FailureT, Any?>
                 for (validation in validations) {
-                    toBeValidatedRight = validation(toBeValidatedRight)
-                    if (toBeValidatedRight.isLeft()) {
+                    validationResult = validation(toBeValidatedRight)
+                    if (validationResult.isLeft()) {
                         break
                     }
                 }
-                toBeValidatedRight
+                validationResult
             }
         }
     }
