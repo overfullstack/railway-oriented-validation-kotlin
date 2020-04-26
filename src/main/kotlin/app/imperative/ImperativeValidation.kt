@@ -1,7 +1,6 @@
 /* gakshintala created on 4/12/20 */
 package app.imperative
 
-import app.common.eggCarton
 import app.domain.Egg
 import app.domain.validation.ValidationFailure
 import app.domain.validation.ValidationFailures
@@ -47,7 +46,7 @@ fun validateEggCartonImperatively(eggCarton: MutableList<Egg?>): Map<Int, Valida
             if (throwableOperation3(eggToBeValidated)) {
                 val yolkTobeValidated = eggToBeValidated.yolk
                 try {
-                    if (!throwableNestedOperation3(yolkTobeValidated)) {
+                    if (!throwableNestedOperation(yolkTobeValidated)) {
                         iterator.remove()
                         badEggFailureBucketMap[eggIndex] = ValidationFailures.YOLK_IS_IN_WRONG_COLOR_C_3
                     }

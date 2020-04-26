@@ -51,7 +51,7 @@ val validateParent3: Validator<ImmutableEgg, ValidationFailure> = { validatedEgg
 val validateChild31: Validator<Yolk, ValidationFailure> = { validatedYolk ->
     validatedYolk
         .flatMap {
-            throwableNestedOperation31(it).unsafeRunSyncEither().flatten()
+            throwableNestedOperation(it).unsafeRunSyncEither().flatten()
                 .mapLeft { exception -> ValidationFailure.withErrorMessage(exception.message) }
         }
         .filterOrElse({ it }, { YOLK_IS_IN_WRONG_COLOR_C_3 })
@@ -60,7 +60,7 @@ val validateChild31: Validator<Yolk, ValidationFailure> = { validatedYolk ->
 val validateChild32: Validator<Yolk, ValidationFailure> = { validatedYolk ->
     validatedYolk
         .flatMap {
-            throwableNestedOperation31(it).unsafeRunSyncEither().flatten()
+            throwableNestedOperation(it).unsafeRunSyncEither().flatten()
                 .mapLeft { exception -> ValidationFailure.withErrorMessage(exception.message) }
         }
         .filterOrElse({ it }, { YOLK_IS_IN_WRONG_COLOR_C_3 })
@@ -87,7 +87,7 @@ val validateParent42: Validator<ImmutableEgg, ValidationFailure> = { validatedEg
 val validateChild4: Validator<Yolk, ValidationFailure> = { validatedYolk ->
     validatedYolk
         .flatMap {
-            throwableNestedOperation31(it).unsafeRunSyncEither().flatten()
+            throwableNestedOperation(it).unsafeRunSyncEither().flatten()
                 .mapLeft { exception -> ValidationFailure.withErrorMessage(exception.message) }
         }
         .filterOrElse({ it }, { YOLK_IS_IN_WRONG_COLOR_C_3 })

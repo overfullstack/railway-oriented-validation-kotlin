@@ -90,7 +90,7 @@ fun validateChild31(
     yolkTobeValidated: Yolk?
 ): Boolean {
     try {
-        if (!throwableNestedOperation3(yolkTobeValidated)) {
+        if (!throwableNestedOperation(yolkTobeValidated)) {
             iterator.remove()
             badEggFailureBucketMap[eggIndex] = ValidationFailures.YOLK_IS_IN_WRONG_COLOR_C_3
             return false
@@ -111,7 +111,7 @@ fun validateChild32(
     yolkTobeValidated: Yolk?
 ): Boolean {
     try {
-        if (!throwableNestedOperation3(yolkTobeValidated)) {
+        if (!throwableNestedOperation(yolkTobeValidated)) {
             iterator.remove()
             badEggFailureBucketMap[eggIndex] = ValidationFailures.YOLK_IS_IN_WRONG_COLOR_C_3
             return false
@@ -151,7 +151,7 @@ fun validateChild4(
     }
     val yolkTobeValidated = eggToBeValidated.yolk
     try {
-        if (!throwableNestedOperation3(yolkTobeValidated)) {
+        if (!throwableNestedOperation(yolkTobeValidated)) {
             iterator.remove()
             badEggFailureBucketMap[eggIndex] = ValidationFailures.YOLK_IS_IN_WRONG_COLOR_C_3
             return false

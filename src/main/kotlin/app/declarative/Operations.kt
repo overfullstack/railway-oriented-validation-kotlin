@@ -13,6 +13,7 @@ import app.domain.validation.THROWABLE_NESTED_OPERATION_31
 import app.domain.validation.THROWABLE_NESTED_OPERATION_32
 import app.domain.validation.THROWABLE_OPERATION_2
 import app.domain.validation.THROWABLE_VALIDATION_3
+import arrow.core.Either
 
 // These check positive cases, true = success ; false = ValidationFailure
 // -----------------------|5----------------|15-------------------|21-------------------
@@ -20,7 +21,7 @@ import app.domain.validation.THROWABLE_VALIDATION_3
 
 fun simpleOperation1(eggToBeValidated: ImmutableEgg?): Boolean = eggToBeValidated != null
 
-fun throwableOperation2(eggToBeValidated: ImmutableEgg) = IO {
+fun throwableOperation2(eggToBeValidated: ImmutableEgg): IO<Nothing, Either<Throwable, Boolean>> = IO {
     if (eggToBeValidated.daysToHatch >= MAX_DAYS_TO_HATCH) {
         throw IllegalArgumentException(THROWABLE_OPERATION_2)
     } else {
@@ -28,7 +29,7 @@ fun throwableOperation2(eggToBeValidated: ImmutableEgg) = IO {
     }
 }.attempt()
 
-fun throwableOperation3(eggToBeValidated: ImmutableEgg) = IO {
+fun throwableOperation3(eggToBeValidated: ImmutableEgg): IO<Nothing, Either<Throwable, Boolean>> = IO {
     if (eggToBeValidated.daysToHatch <= 0) {
         throw IllegalArgumentException(THROWABLE_VALIDATION_3)
     } else {
@@ -36,7 +37,7 @@ fun throwableOperation3(eggToBeValidated: ImmutableEgg) = IO {
     }
 }.attempt()
 
-fun throwableNestedOperation31(yolk: Yolk?) = IO {
+fun throwableNestedOperation(yolk: Yolk?): IO<Nothing, Either<Throwable, Boolean>> = IO {
     when {
         yolk == null -> throw IllegalArgumentException(THROWABLE_NESTED_OPERATION_31)
         yolk.condition == Condition.BAD -> throw IllegalArgumentException(THROWABLE_NESTED_OPERATION_32)

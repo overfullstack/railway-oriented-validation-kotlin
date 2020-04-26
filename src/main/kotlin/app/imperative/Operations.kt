@@ -32,7 +32,7 @@ fun throwableOperation3(eggToBeValidated: Egg): Boolean = if (eggToBeValidated.d
     eggToBeValidated.daysToHatch >= MAX_DAYS_TO_SHIP // Otherwise, Might hatch too soon
 }
 
-fun throwableNestedOperation3(yolkTobeValidated: Yolk?): Boolean = when {
+fun throwableNestedOperation(yolkTobeValidated: Yolk?): Boolean = when {
     yolkTobeValidated == null -> throw IllegalArgumentException(THROWABLE_NESTED_OPERATION_31)
     yolkTobeValidated.condition === Condition.BAD -> throw IllegalArgumentException(THROWABLE_NESTED_OPERATION_32)
     else -> yolkTobeValidated.color === Color.GOLD || yolkTobeValidated.color === Color.YELLOW
