@@ -33,7 +33,7 @@ val validate1SimpleX: Validator<ImmutableEgg, ValidationFailure> = {
 val validate2ThrowableX: Validator<ImmutableEgg, ValidationFailure> = { validatedEgg ->
     Either.fx<ValidationFailure, Boolean> {
         val immutableEgg = !validatedEgg
-        val operationResult = !throwableOperation2(immutableEgg).unsafeRunSyncEither()
+        val operationResult = throwableOperation2(immutableEgg).unsafeRunSyncEither()
         !operationResult.mapLeft { exception -> ValidationFailure.withErrorMessage(exception.message) }
     }.filterOrElse({ it }, { TOO_LATE_TO_HATCH_2 })
 }
@@ -41,7 +41,7 @@ val validate2ThrowableX: Validator<ImmutableEgg, ValidationFailure> = { validate
 val validateParent3X: Validator<ImmutableEgg, ValidationFailure> = { validatedEgg ->
     Either.fx<ValidationFailure, Boolean> {
             val immutableEgg = !validatedEgg
-            val operationResult = !throwableOperation3(immutableEgg).unsafeRunSyncEither()
+            val operationResult = throwableOperation3(immutableEgg).unsafeRunSyncEither()
             !operationResult.mapLeft { exception -> ValidationFailure.withErrorMessage(exception.message) }
         }.filterOrElse({ it }, { ABOUT_TO_HATCH_P_3 })
 }
@@ -49,7 +49,7 @@ val validateParent3X: Validator<ImmutableEgg, ValidationFailure> = { validatedEg
 val validateChild31X: Validator<Yolk, ValidationFailure> = { validatedYolk ->
     Either.fx<ValidationFailure, Boolean> {
         val yolk = !validatedYolk
-        val operationResult = !throwableNestedOperation(yolk).unsafeRunSyncEither()
+        val operationResult = throwableNestedOperation(yolk).unsafeRunSyncEither()
         !operationResult.mapLeft { exception -> ValidationFailure.withErrorMessage(exception.message) }
     }.filterOrElse({ it }, { YOLK_IS_IN_WRONG_COLOR_C_3 })
 }
@@ -57,7 +57,7 @@ val validateChild31X: Validator<Yolk, ValidationFailure> = { validatedYolk ->
 val validateChild32X: Validator<Yolk, ValidationFailure> = { validatedYolk ->
     Either.fx<ValidationFailure, Boolean> {
         val yolk = !validatedYolk
-        val operationResult = !throwableNestedOperation(yolk).unsafeRunSyncEither()
+        val operationResult = throwableNestedOperation(yolk).unsafeRunSyncEither()
         !operationResult.mapLeft { exception -> ValidationFailure.withErrorMessage(exception.message) }
     }.filterOrElse({ it }, { YOLK_IS_IN_WRONG_COLOR_C_3 })
 }
@@ -65,7 +65,7 @@ val validateChild32X: Validator<Yolk, ValidationFailure> = { validatedYolk ->
 val validateParent41X: Validator<ImmutableEgg, ValidationFailure> = { validatedEgg ->
     Either.fx<ValidationFailure, Boolean> {
         val immutableEgg = !validatedEgg
-        val operationResult = !throwableOperation3(immutableEgg).unsafeRunSyncEither()
+        val operationResult = throwableOperation3(immutableEgg).unsafeRunSyncEither()
         !operationResult.mapLeft { exception -> ValidationFailure.withErrorMessage(exception.message) }
     }.filterOrElse({ it }, { ABOUT_TO_HATCH_P_3 })
 }
@@ -73,7 +73,7 @@ val validateParent41X: Validator<ImmutableEgg, ValidationFailure> = { validatedE
 val validateParent42X: Validator<ImmutableEgg, ValidationFailure> = { validatedEgg ->
     Either.fx<ValidationFailure, Boolean> {
         val immutableEgg = !validatedEgg
-        val operationResult = !throwableOperation3(immutableEgg).unsafeRunSyncEither()
+        val operationResult = throwableOperation3(immutableEgg).unsafeRunSyncEither()
         !operationResult.mapLeft { exception -> ValidationFailure.withErrorMessage(exception.message) }
     }.filterOrElse({ it }, { ABOUT_TO_HATCH_P_3 })
 }
@@ -81,7 +81,7 @@ val validateParent42X: Validator<ImmutableEgg, ValidationFailure> = { validatedE
 val validateChild4X: Validator<Yolk, ValidationFailure> = { validatedYolk ->
     Either.fx<ValidationFailure, Boolean> {
         val yolk = !validatedYolk
-        val operationResult = !throwableNestedOperation(yolk).unsafeRunSyncEither()
+        val operationResult = throwableNestedOperation(yolk).unsafeRunSyncEither()
         !operationResult.mapLeft { exception -> ValidationFailure.withErrorMessage(exception.message) }
     }.filterOrElse({ it }, { YOLK_IS_IN_WRONG_COLOR_C_3 })
 }

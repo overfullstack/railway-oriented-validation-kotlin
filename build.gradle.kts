@@ -45,20 +45,20 @@ tasks.withType<Test> {
 
 testlogger {
     setTheme("mocha")
-    showExceptions=true
-    showStackTraces=true
-    showFullStackTraces=true
-    showCauses=true
-    slowThreshold=2000
-    showSummary=true
-    showSimpleNames=true
-    showPassed=true
-    showSkipped=true
-    showFailed=true
-    showStandardStreams=true
-    showPassedStandardStreams=true
-    showSkippedStandardStreams=true
-    showFailedStandardStreams=true
+    showExceptions = true
+    showStackTraces = true
+    showFullStackTraces = true
+    showCauses = true
+    slowThreshold = 2000
+    showSummary = true
+    showSimpleNames = true
+    showPassed = true
+    showSkipped = true
+    showFailed = true
+    showStandardStreams = true
+    showPassedStandardStreams = true
+    showSkippedStandardStreams = true
+    showFailedStandardStreams = true
 }
 
 detekt {
