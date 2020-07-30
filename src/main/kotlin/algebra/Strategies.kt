@@ -1,97 +1,116 @@
 /* gakshintala created on 4/11/20 */
 package algebra
 
-import arrow.core.Either
-import arrow.core.left
-import arrow.core.right
+import arrow.core.*
+import arrow.fx.coroutines.parTraverse
+import mu.KotlinLogging
+
+private val logger = KotlinLogging.logger {}
 
 /* ---------------------------FAIL FAST--------------------------- */
 
-fun <FailureT, ValidatableT> getFailFastStrategyStrategy(
+fun <FailureT, ValidatableT> failFastStrategy(
     validations: List<Validator<ValidatableT, FailureT>>,
-    invalidValidatable: FailureT
-): FailFastStrategy<ValidatableT, FailureT> = {
-    when (it) {
+    throwableMapper: (Throwable) -> FailureT,
+    invalidValidatable: FailureT,
+): FailFastStrategy<ValidatableT, FailureT> = { validatable ->
+    when (validatable) {
         null -> invalidValidatable.left()
         else -> {
-            val toBeValidatedRight: Either<FailureT, ValidatableT> = it.right()
-            validations.fold(toBeValidatedRight as Either<FailureT, Any?>) { prevValidationResult, currentValidation ->
-                if (prevValidationResult.isRight()) currentValidation(toBeValidatedRight) else prevValidationResult
-            }
+            logger.info { "Processing $validatable on ${Thread.currentThread().name}" }
+            // Validations are run sequential for fail-fast
+            validations.fold(validatable.right() as Either<FailureT, Any?>) { prevValidationResult, currentValidation ->
+                prevValidationResult.flatMap {
+                    fireValidation(currentValidation, validatable, throwableMapper)
+                }
+            }.map { validatable } // To put back the original validatable in place of `Any?` in right state.
         }
     }
 }
 
-fun <FailureT, ValidatableT> getFailFastStrategyStrategy2(
+fun <FailureT, ValidatableT> failFastStrategy2(
     validations: List<Validator<ValidatableT, FailureT>>,
-    invalidValidatable: FailureT
-): FailFastStrategy<ValidatableT, FailureT> =
-    { toBeValidated ->
-        when (toBeValidated) {
-            null -> invalidValidatable.left()
-            else -> {
-                val toBeValidatedRight: Either<FailureT, ValidatableT> = toBeValidated.right()
-                validations
-                    .map { validation -> validation(toBeValidatedRight) }
-                    .firstOrNull { it.isLeft() } ?: toBeValidatedRight
-            }
+    throwableMapper: (Throwable) -> FailureT,
+    invalidValidatable: FailureT,
+): FailFastStrategy<ValidatableT, FailureT> = { validatable ->
+    when (validatable) {
+        null -> invalidValidatable.left()
+        else -> {
+            val validationResult = validations
+                .map { fireValidation(it, validatable, throwableMapper) }
+                .firstOrNull { it.isLeft() } ?: validatable.right()
+            validationResult as Either<FailureT, ValidatableT?>
         }
     }
+}
 
-fun <FailureT, ValidatableT> getErrorAccumulationStrategy(
+/* ---------------------------ACCUMULATION--------------------------- */
+
+fun <FailureT, ValidatableT> accumulationStrategy(
     validations: List<Validator<ValidatableT, FailureT>>,
-    invalidValidatable: FailureT
-): AccumulationStrategy<ValidatableT, FailureT> =
-    {
-        when (it) {
-            null -> listOf(invalidValidatable.left())
-            else -> {
-                val toBeValidatedRight: Either<FailureT, ValidatableT> = it.right()
-                validations.fold(emptyList()) { failureResults, currentValidation ->
-                    val result = currentValidation(toBeValidatedRight)
-                    if (result.isLeft()) (failureResults + result) else failureResults
-                }
-            }
+    throwableMapper: (Throwable) -> FailureT,
+    invalidValidatable: FailureT,
+): AccumulationStrategy<ValidatableT, FailureT> = { validatable ->
+    when (validatable) {
+        null -> listOf(invalidValidatable.left())
+        else -> {
+            validations.map { fireValidation(it, validatable, throwableMapper) }
+                .map { it.map { validatable } }
         }
     }
+}
 
-fun <FailureT, ValidatableT> getErrorAccumulationStrategy2(
+fun <FailureT, ValidatableT> accumulationStrategyInParallel(
     validations: List<Validator<ValidatableT, FailureT>>,
-    invalidValidatable: FailureT
-): AccumulationStrategy<ValidatableT, FailureT> =
-    { toBeValidated ->
-        when (toBeValidated) {
-            null -> listOf(invalidValidatable.left())
-            else -> {
-                val toBeValidatedRight: Either<FailureT, ValidatableT> = toBeValidated.right()
-                validations
-                    .map { validation -> validation(toBeValidatedRight) }
-                    .filter { it.isLeft() }
-            }
+    throwableMapper: (Throwable) -> FailureT,
+    invalidValidatable: FailureT,
+): AccumulationStrategy<ValidatableT, FailureT> = { validatable ->
+    when (validatable) {
+        null -> listOf(invalidValidatable.left())
+        else -> {
+            validations
+                .parTraverse { validation -> fireValidation(validation, validatable, throwableMapper) }
+                .map { it.map { validatable } }
         }
     }
+}
 
-fun <FailureT, ValidatableT> runAllValidationsFailFastStrategyImperative(
+private suspend fun <FailureT, ValidatableT> fireValidation(
+    validation: Validator<ValidatableT, FailureT>,
+    validatable: ValidatableT,
+    throwableMapper: (Throwable) -> FailureT,
+): Either<FailureT, Any?> = Either.catch {
+    validation(validatable)
+}.fold({ throwableMapper(it).left() }, ::identity)
+
+/* ---------------------------IMPERATIVE FAIL FAST--------------------------- */
+
+suspend fun <FailureT, ValidatableT> runAllValidationsFailFastStrategyImperative(
     validatables: List<ValidatableT?>,
     validations: List<Validator<ValidatableT, FailureT>>,
-    invalidValidatable: FailureT
-): List<Either<FailureT, Any?>> {
-    val validationResults = mutableListOf<Either<FailureT, Any?>>()
+    throwableMapper: (Throwable) -> FailureT,
+    invalidValidatable: FailureT,
+): List<Either<FailureT, ValidatableT?>> {
+    val validationResults = mutableListOf<Either<FailureT, ValidatableT?>>()
     for (validatable in validatables) {
         validationResults += when (validatable) { // 🚩 Mutation 
             null -> invalidValidatable.left()
             else -> {
-                val toBeValidatedRight: Either<FailureT, ValidatableT> = validatable.right()
-                lateinit var validationResult: Either<FailureT, Any?>
+                lateinit var validationResult: Either<FailureT, ValidatableT?>
                 for (validation in validations) {
-                    validationResult = validation(toBeValidatedRight)
+                    validationResult = try {
+                        validation(validatable).map { validatable }
+                    } catch (e: Throwable) {
+                        throwableMapper(e).left()
+                    }
                     if (validationResult.isLeft()) {
                         break
                     }
                 }
-                validationResult
+                if (validationResult.isLeft()) validationResult else validatable.right()
             }
         }
     }
     return validationResults
 }
+

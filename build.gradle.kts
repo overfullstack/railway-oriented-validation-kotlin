@@ -1,10 +1,10 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.4-M1"
-    id("org.sonarqube") version "2.8"
-    id("io.gitlab.arturbosch.detekt") version "1.7.4"
-    id("com.adarshr.test-logger") version "2.0.0"
+    kotlin("jvm")
+    id("org.sonarqube") version "3.0"
+    id("io.gitlab.arturbosch.detekt") version "1.14.1"
+    id("com.adarshr.test-logger") version "2.1.1"
 }
 
 group = "io.overfullstack"
@@ -16,16 +16,17 @@ repositories {
     jcenter()
 }
 
-val arrowSnapshotVersion = "0.11.0-SNAPSHOT"
+val arrowSnapshotVersion = "latest.integration"
 
 dependencies {
-    implementation(kotlin("stdlib-jdk8"))
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:+")
     implementation("io.arrow-kt:arrow-core:$arrowSnapshotVersion")
     implementation("io.arrow-kt:arrow-fx:$arrowSnapshotVersion")
+    implementation("io.arrow-kt:arrow-fx-coroutines:$arrowSnapshotVersion")
     implementation("io.github.microutils:kotlin-logging:+")
-
-    runtimeOnly("org.apache.logging.log4j:log4j-core:+")
-    runtimeOnly("org.apache.logging.log4j:log4j-slf4j-impl:+")
+    // All other dependencies for log4j2 are taken care by kotlin-logging, so you don't need the below
+    // implementation("org.slf4j:slf4j-api:+")
+    runtimeOnly("org.apache.logging.log4j:log4j-slf4j18-impl:+") // slf4j18 - 18 is required for newer version.
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:+")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:+")
@@ -33,7 +34,7 @@ dependencies {
 
 tasks.withType<KotlinCompile> {
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_13.toString()
+        jvmTarget = JavaVersion.VERSION_14.toString()
     }
 }
 

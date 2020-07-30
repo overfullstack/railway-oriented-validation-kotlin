@@ -2,6 +2,7 @@ package algebra
 
 import arrow.core.Either
 
-typealias Validator<ValidatableT, FailureT> = (Either<FailureT, ValidatableT>) -> Either<FailureT, Any?>
-typealias FailFastStrategy<ValidatableT, FailureT> = (ValidatableT?) -> Either<FailureT, Any?>
-typealias AccumulationStrategy<ValidatableT, FailureT> = (ValidatableT?) -> List<Either<FailureT, Any?>>
+typealias Validator<ValidatableT, FailureT> = suspend (ValidatableT) -> Either<FailureT, Any?>
+
+typealias FailFastStrategy<ValidatableT, FailureT> = suspend (ValidatableT?) -> Either<FailureT, ValidatableT?>
+typealias AccumulationStrategy<ValidatableT, FailureT> = suspend (ValidatableT?) -> List<Either<FailureT, ValidatableT?>>

@@ -10,7 +10,8 @@ import org.junit.jupiter.api.Test
 class ImperativeValidation2Test {
     @Test
     fun `Octopus Orchestrator`() {
-        val badEggFailureBucketMap = validateEggCartonImperatively2(eggCarton.toMutableList()) // sending a copy, a the iterator is common
+        val badEggFailureBucketMap =
+            validateEggCartonImperatively2(eggCarton.toMutableList()) // sending a copy, a the iterator is common
         logger.info { badEggFailureBucketMap }
         Assertions.assertEquals(expectedImperativeValidationResults, badEggFailureBucketMap)
     }

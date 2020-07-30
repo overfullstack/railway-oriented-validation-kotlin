@@ -1,28 +1,26 @@
 /* gakshintala created on 4/12/20 */
 package app.imperative
 
-import app.domain.Egg
+import app.domain.*
 import app.domain.validation.ValidationFailure
 import app.domain.validation.ValidationFailures
 
 /**
- * <pre>
  * Problems:
  * ∙ Complexity
  * ∙ Mutation
- * . Non-sharable
+ * . Non-sharable validations
  * ∙ Unit-Testability
  * ∙ Validation Jenga
- * </pre>
  */
-@Suppress("LoopWithTooManyJumpStatements", "TooGenericExceptionCaught")
-fun validateEggCartonImperatively(eggCarton: MutableList<Egg?>): Map<Int, ValidationFailure>? {
+@Suppress("LoopWithTooManyJumpStatements", "TooGenericExceptionCaught", "NestedBlockDepth")
+fun validateEggCartonImperatively(eggCarton: MutableList<Egg?>): Map<Int, ValidationFailure> {
     val badEggFailureBucketMap = mutableMapOf<Int, ValidationFailure>()
     var eggIndex = 0
     val iterator = eggCarton.iterator()
     while (iterator.hasNext()) {
         val eggToBeValidated = iterator.next()
-        if (!simpleOperation1(eggToBeValidated)) {
+        if (!simpleRule(eggToBeValidated)) {
             iterator.remove() // Mutation
             // How can you cleanly map validation-failure to which validation-method failed?
             badEggFailureBucketMap[eggIndex] = ValidationFailures.NO_EGG_TO_VALIDATE_1
@@ -30,7 +28,7 @@ fun validateEggCartonImperatively(eggCarton: MutableList<Egg?>): Map<Int, Valida
             continue
         }
         try {
-            if (!throwableOperation2(eggToBeValidated!!)) {
+            if (!throwableRule2(eggToBeValidated!!)) {
                 iterator.remove()
                 badEggFailureBucketMap[eggIndex] = ValidationFailures.TOO_LATE_TO_HATCH_2
                 eggIndex++
@@ -43,10 +41,10 @@ fun validateEggCartonImperatively(eggCarton: MutableList<Egg?>): Map<Int, Valida
             continue
         }
         try { // Inter-dependent validations
-            if (throwableOperation3(eggToBeValidated)) {
+            if (throwableRule3(eggToBeValidated)) {
                 val yolkTobeValidated = eggToBeValidated.yolk
                 try {
-                    if (!throwableNestedOperation(yolkTobeValidated)) {
+                    if (!throwableNestedRule(yolkTobeValidated)) {
                         iterator.remove()
                         badEggFailureBucketMap[eggIndex] = ValidationFailures.YOLK_IS_IN_WRONG_COLOR_C_3
                     }

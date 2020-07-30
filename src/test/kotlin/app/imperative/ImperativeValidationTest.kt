@@ -10,7 +10,8 @@ import org.junit.jupiter.api.Test
 class ImperativeValidationTest {
     @Test
     fun cyclomaticCode() {
-        val badEggFailureBucketMap = validateEggCartonImperatively(eggCarton.toMutableList()) // sending a copy, a the iterator is common
+        val badEggFailureBucketMap =
+            validateEggCartonImperatively(eggCarton.toMutableList()) // sending a copy, a the iterator is common
         logger.info { badEggFailureBucketMap }
         Assertions.assertEquals(expectedImperativeValidationResults, badEggFailureBucketMap)
     }
