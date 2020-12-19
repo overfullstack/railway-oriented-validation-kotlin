@@ -46,6 +46,9 @@ fun <FailureT, ValidatableT> failFastStrategy2(
 
 /* ---------------------------ACCUMULATION--------------------------- */
 
+/**
+ * Multiple validatables are validated in-parallel
+ */
 fun <FailureT, ValidatableT> accumulationStrategy(
     validations: List<Validator<ValidatableT, FailureT>>,
     throwableMapper: (Throwable) -> FailureT,
@@ -60,6 +63,9 @@ fun <FailureT, ValidatableT> accumulationStrategy(
     }
 }
 
+/**
+ * Multiple validations are run on each validatable in-parallel.
+ */
 fun <FailureT, ValidatableT> accumulationStrategyInParallel(
     validations: List<Validator<ValidatableT, FailureT>>,
     throwableMapper: (Throwable) -> FailureT,

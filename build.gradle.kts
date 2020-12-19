@@ -34,7 +34,7 @@ dependencies {
 
 tasks.withType<KotlinCompile> {
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_14.toString()
+        jvmTarget = JavaVersion.VERSION_15.toString()
     }
 }
 
