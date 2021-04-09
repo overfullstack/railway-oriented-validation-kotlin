@@ -31,12 +31,15 @@ val validate1SimpleX: Validator<Egg, ValidationFailure> = {
     if (simpleRule(it)) true.right() else NO_EGG_TO_VALIDATE_1.left()
 }
 
+/**
+ * A Validation which does blocking operations.
+ */
 val validate2ThrowableX: Validator<Egg, ValidationFailure> = {
     // Awesome DSL from arrow to work with either in an imperative way (Best of both worlds).
     either<ValidationFailure, String> {
         val result = throwableRule2(it)
-        val id = !getSomethingFromDb(result)
-        !getSomethingElseFromNetwork(id)
+        val id = getSomethingFromDb(result).bind()
+        getSomethingElseFromNetwork(id).bind()
     }.filterOrElse({ data -> data.isEmpty() }, { TOO_LATE_TO_HATCH_2 })
 }
 

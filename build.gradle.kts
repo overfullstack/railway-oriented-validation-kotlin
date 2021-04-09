@@ -2,17 +2,16 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm")
-    id("org.sonarqube") version "3.0"
-    id("io.gitlab.arturbosch.detekt") version "1.14.1"
-    id("com.adarshr.test-logger") version "2.1.1"
+    id("org.sonarqube") version "3.1.1"
+    id("io.gitlab.arturbosch.detekt") version "1.16.0"
+    id("com.adarshr.test-logger") version "3.0.0"
 }
 
 group = "io.overfullstack"
 version = "1.0-SNAPSHOT"
 
 repositories {
-    maven("https://dl.bintray.com/kotlin/kotlin-eap")
-    maven("https://oss.jfrog.org/artifactory/oss-snapshot-local/")
+    mavenCentral()
     jcenter()
 }
 
@@ -28,8 +27,9 @@ dependencies {
     // implementation("org.slf4j:slf4j-api:+")
     runtimeOnly("org.apache.logging.log4j:log4j-slf4j18-impl:+") // slf4j18 - 18 is required for newer version.
 
-    testImplementation("org.junit.jupiter:junit-jupiter-api:+")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:+")
+    testImplementation(platform("org.junit:junit-bom:5.8.0-M1"))
+    testImplementation("org.junit.jupiter:junit-jupiter-api")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 }
 
 tasks.withType<KotlinCompile> {
@@ -39,9 +39,7 @@ tasks.withType<KotlinCompile> {
 }
 
 tasks.withType<Test> {
-    useJUnitPlatform {
-        excludeEngines("junit-vintage")
-    }
+    useJUnitPlatform()
 }
 
 testlogger {

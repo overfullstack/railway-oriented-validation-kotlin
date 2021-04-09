@@ -7,8 +7,11 @@ import app.domain.Condition.GOOD
 import app.domain.Egg
 import app.domain.Yolk
 import app.domain.validation.*
+import app.domain.validation.ValidationFailure.Companion.withErrorMessage
 import app.domain.validation.ValidationFailures.*
 import arrow.core.Either
+import arrow.core.left
+import arrow.core.right
 
 val eggCarton: MutableList<Egg?> = mutableListOf(
     null, // No egg to validate
@@ -43,27 +46,27 @@ val eggCartonImmutable: List<Egg?> = listOf(
 val expectedImperativeValidationResults: Map<Int, ValidationFailure> = mapOf(
     0 to NO_EGG_TO_VALIDATE_1,
     1 to ABOUT_TO_HATCH_P_3,
-    2 to ValidationFailure.withErrorMessage(THROWABLE_NESTED_OPERATION_32),
-    3 to ValidationFailure.withErrorMessage(THROWABLE_OPERATION_2),
-    5 to ValidationFailure.withErrorMessage(THROWABLE_VALIDATION_3),
+    2 to withErrorMessage(THROWABLE_NESTED_OPERATION_32),
+    3 to withErrorMessage(THROWABLE_OPERATION_2),
+    5 to withErrorMessage(THROWABLE_VALIDATION_3),
     6 to TOO_LATE_TO_HATCH_2,
-    8 to ValidationFailure.withErrorMessage(THROWABLE_VALIDATION_3),
-    9 to ValidationFailure.withErrorMessage(THROWABLE_NESTED_OPERATION_32),
+    8 to withErrorMessage(THROWABLE_VALIDATION_3),
+    9 to withErrorMessage(THROWABLE_NESTED_OPERATION_32),
     10 to YOLK_IS_IN_WRONG_COLOR_C_3,
-    11 to ValidationFailure.withErrorMessage(THROWABLE_NESTED_OPERATION_31)
+    11 to withErrorMessage(THROWABLE_NESTED_OPERATION_31)
 )
 
 val expectedDeclarativeValidationResults: List<Either<ValidationFailure, Egg>> = listOf(
-    Either.left(NOTHING_TO_VALIDATE),
-    Either.left(ABOUT_TO_HATCH_P_3),
-    Either.left(ValidationFailure.withErrorMessage(THROWABLE_NESTED_OPERATION_32)),
-    Either.left(ValidationFailure.withErrorMessage(THROWABLE_OPERATION_2)),
-    Either.right(Egg(5, Yolk(GOOD, YELLOW))),
-    Either.left(ValidationFailure.withErrorMessage(THROWABLE_VALIDATION_3)),
-    Either.left(TOO_LATE_TO_HATCH_2),
-    Either.right(Egg(14, Yolk(GOOD, GOLD))),
-    Either.left(ValidationFailure.withErrorMessage(THROWABLE_VALIDATION_3)),
-    Either.left(ValidationFailure.withErrorMessage(THROWABLE_NESTED_OPERATION_32)),
-    Either.left(YOLK_IS_IN_WRONG_COLOR_C_3),
-    Either.left(NO_CHILD_TO_VALIDATE)
+    NOTHING_TO_VALIDATE.left(),
+    ABOUT_TO_HATCH_P_3.left(),
+    withErrorMessage(THROWABLE_NESTED_OPERATION_32).left(),
+    withErrorMessage(THROWABLE_OPERATION_2).left(),
+    Egg(5, Yolk(GOOD, YELLOW)).right(),
+    withErrorMessage(THROWABLE_VALIDATION_3).left(),
+    TOO_LATE_TO_HATCH_2.left(),
+    Egg(14, Yolk(GOOD, GOLD)).right(),
+    withErrorMessage(THROWABLE_VALIDATION_3).left(),
+    withErrorMessage(THROWABLE_NESTED_OPERATION_32).left(),
+    YOLK_IS_IN_WRONG_COLOR_C_3.left(),
+    NO_CHILD_TO_VALIDATE.left()
 )
