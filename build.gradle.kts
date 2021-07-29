@@ -2,8 +2,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm")
-    id("org.sonarqube") version "3.1.1"
-    id("io.gitlab.arturbosch.detekt") version "1.16.0"
+    id("org.sonarqube") version "3.3"
+    id("io.gitlab.arturbosch.detekt") version "1.18.0-RC2"
     id("com.adarshr.test-logger") version "3.0.0"
 }
 
@@ -34,7 +34,7 @@ dependencies {
 
 tasks.withType<KotlinCompile> {
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_15.toString()
+        jvmTarget = JavaVersion.VERSION_16.toString()
     }
 }
 

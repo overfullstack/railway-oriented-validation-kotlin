@@ -19,8 +19,8 @@ fun <FailureT, ValidatableT> failFastStrategy(
         else -> {
             logger.info { "Processing $validatable on ${Thread.currentThread().name}" }
             // Validations are run sequential for fail-fast
-            validations.fold(validatable.right() as Either<FailureT, Any?>) { prevValidationResult, currentValidation ->
-                prevValidationResult.flatMap {
+            validations.fold(validatable.right() as Either<FailureT, Any?>) { previousValidationResult, currentValidation ->
+                previousValidationResult.flatMap {
                     fireValidation(currentValidation, validatable, throwableMapper)
                 }
             }.map { validatable } // To put back the original validatable in place of `Any?` in right state.
@@ -36,7 +36,7 @@ fun <FailureT, ValidatableT> failFastStrategy2(
     when (validatable) {
         null -> invalidValidatable.left()
         else -> {
-            val validationResult = validations
+            val validationResult = validations.asSequence()
                 .map { fireValidation(it, validatable, throwableMapper) }
                 .firstOrNull { it.isLeft() } ?: validatable.right()
             validationResult as Either<FailureT, ValidatableT?>
